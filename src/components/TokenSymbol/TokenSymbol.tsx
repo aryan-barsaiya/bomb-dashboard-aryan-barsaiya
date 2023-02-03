@@ -17,6 +17,9 @@ import busmBusdLpLogo from '../../assets/img/busm-busd-lp.png';
 import bnbLogo from '../../assets/img/bnb.png';
 import btcLogo from '../../assets/img/BCTB-icon.png';
 
+import metamaskLogo from '../../assets/img/metamask.png';
+
+
 const logosBySymbol: {[title: string]: string} = {
   //Real tokens
   //=====================
@@ -37,6 +40,7 @@ const logosBySymbol: {[title: string]: string} = {
   BTCB: btcLogo,
   BTC: btcLogo,
   SVL: bnbLogo,
+  META : metamaskLogo,
   'BOMB-BNB-LP': bombFtmLpLogo,
   'BOMB-BTCB-LP': bombFtmLpLogo,
     '80BOMB-20BTCB-LP': bombFtmLpLogo,

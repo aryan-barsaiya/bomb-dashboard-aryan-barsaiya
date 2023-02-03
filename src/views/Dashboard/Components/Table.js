@@ -2,11 +2,11 @@ import * as React  from 'react';
 // import { useMemo } from 'react';
 import styled from 'styled-components';
 import '../Dashboard.css';
-
 import usebShareStats from '../../../hooks/usebShareStats';
 import { roundAndFormatNumber } from '../../../0x';
 
 import TokenSymbol from '../../../components/TokenSymbol';
+
 
 const Table = styled.table`
   color: white;
@@ -53,43 +53,36 @@ export default function BasicTable() {
     <div>
     <Table>
       <Tr>
+        <th></th>
         <Th></Th>
         <Th>Current Supply</Th>
         <Th>Total Supply</Th>
         <Th>Price</Th>
       </Tr>
       <Tr>
-        <Td>
-          <TokenSymbol symbol="BOMB" size={28} />
-          $BOMB
-        </Td>
+        <td><TokenSymbol symbol="BOMB" size={28} /></td>
+        <Td>$BOMB</Td>
         <Td>8.66M</Td>
         <Td>1.69</Td>
-        <Td>
-          $0.24 <br></br>1.05BTCB
-        </Td>
+        <Td>$0.24 <br></br>1.05BTCB</Td>
+        <td><TokenSymbol symbol="META" size={28} /></td>
       </Tr>
       <Tr>
-        <Td>
-          <TokenSymbol symbol="BSHARE" size={28} />
-          $BSHARE
-        </Td>
+        <td><TokenSymbol symbol="BSHARE" size={28} /></td>
+        <Td>$BSHARE</Td>
         <Td>11.43K</Td>
         <Td>111</Td>
-        <Td>
-          $300 <br></br> 13000 BTCB
-        </Td>
+        <Td>$300 <br></br> 13000 BTCB</Td>
+        <td><TokenSymbol symbol="META" size={28} /></td>
       </Tr>
       <Tr>
-        <Td>
-          <TokenSymbol symbol="BBOND" size={28} />
-          $BBOND
-        </Td>
+        <td><TokenSymbol symbol="BBOND" size={28} /></td>
+        <Td>$BBOND</Td>
         <Td>20.00K</Td>
         <Td>175K</Td>
-        <Td>
-          0.28 <br></br> 1.15BTCB
-        </Td>
+        <Td>0.28 <br></br> 1.15BTCB</Td>
+        <td><TokenSymbol symbol="META" size={28}  /></td>
+
       </Tr>
     </Table>
   </div>
