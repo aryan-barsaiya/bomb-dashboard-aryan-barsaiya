@@ -1,10 +1,20 @@
-import React from 'react';
-
+import React,{useMemo} from 'react';
+// import useCashPriceInLastTWAP from '../../hooks/useCashPriceInLastTP';
 import Table from './Components/Table';
 import styled from 'styled-components';
 import Nav from '../../components/Nav';
 import TokenSymbol from '../../components/TokenSymbol';
-import { Button } from '@material-ui/core';
+import useCashPriceInLastTWAP from '../../hooks/useCashPriceInLastTWAP';
+// import Button from './Components/Button';
+import { Token } from 'graphql';
+import BombImage from '../../assets/img/bomb-512.png';
+import CountUp from 'react-countup';
+import {Box,Button,Grid,Typography,} from '@material-ui/core';
+import { getDisplayBalance } from '../../utils/formatBalance';
+import useTotalValueLocked from '../../hooks/useTotalValueLocked';
+import useStakedBalanceOnBoardroom from '../../hooks/useStakedBalanceOnBoardroom';
+// const cashPrice = useCashPriceInLastTWAP();
+// console.log(cashPrice);
 
 const Container = styled.div`
   background-image: url('./background.jpg');
@@ -29,6 +39,10 @@ const Title = styled.h2`
   text-align: center;
 `;
 const Dashboard = () => {
+  const TVL = useTotalValueLocked();
+  const cashPrice = useCashPriceInLastTWAP();
+  const stakedBalance = useStakedBalanceOnBoardroom();
+  const scalingFactor = useMemo(() => (cashPrice ? Number(cashPrice) : null), [cashPrice]);
   return (
     <Container>
       <Nav />
@@ -53,7 +67,60 @@ const Dashboard = () => {
           </div>
         </div>
       </Card>
+      <Button className='button'style={{width:'59%'}}>Zap In</Button>
+          <Grid container rowSpacing={1} >
+            <Grid item xs={8}> 
+                <Button className='button1' style={{width:'49%',marginTop:'30px',marginRight:'5px'}}>Chat On Discord</Button>
+                <Button className='button1' style={{width:'49%',marginTop:'30px'}}>Read Docs</Button>
+                <Card>
+          <img src={BombImage} alt="Bomb.money" style={{ maxHeight: '40px',float:'left',padding:'7px' }} />
+          <div className='header'>
+          <h3 >Boardroom</h3>
+           <p>Stake BSHARE and earn BOMB every epoch&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TVL:  <CountUp style={{ fontSize: '25px' }} end={TVL} separator="," prefix="$" /></p>
+           
 
+           <hr  style={{color:'white'}} />
+           <Typography style={{marginLeft:'360px'}}>Total Staked: <img src={BombImage} alt="Bomb.money" style={{ maxHeight: '20px',float:'left',marginTop:'0px' }} /></Typography>
+         
+              <Grid container rowSpacing={1} >
+  <Grid item xs={2}>
+  <span style={{ fontSize: '20px' }}>
+                 Daily Returns<br />
+               2% <br />
+           
+              </span>
+  </Grid>
+  <Grid item xs={3}>
+  <span style={{fontSize: '20px'}}>
+              Your Stake: <br />
+            6.0000      <br />
+             ≈ ${getDisplayBalance(stakedBalance)}
+              </span>
+  </Grid>
+  <Grid item xs={3}>
+  <span style={{fontSize: '20px'}}>
+  Earned: 
+ <br />
+1660.4413      <br />
+≈ $298.88
+              </span>
+  </Grid>
+  <Grid item xs={4}>
+ <Button className='button1' style={{width:'100px',marginTop:'0px',marginRight:'5px'}}>
+                  Deposit
+                </Button>
+                <Button className='button1' style={{width:'100px',marginTop:'0px'}}>
+                  Withdraw
+                </Button>
+                 <Button className='button1' style={{width:'200px',marginTop:'10px'}}>
+                  Claim Rewards
+                </Button>
+  </Grid>
+  </Grid>
+  </div>
+  </Card>
+  </Grid>
+  </Grid>
       <Card>
         <div style={{ display: 'flex', alignContent: 'center', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
@@ -66,13 +133,14 @@ const Dashboard = () => {
               <br />
             </p>
           </div>
-          <div style={{ border: '2px solid white', borderRadius: '16px', padding: '4px 32px' }}>Claim All</div>
+          <div style={{ border: '2px solid white', borderRadius: '16px', padding: '4px 32px' }}>Claim All&emsp;
+          <TokenSymbol symbol='BSHARE' size={15}/></div>
         </div>
         {/* Bomb btcb */}
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div style={{ fontSize: '20px', display: 'flex', alignContent: 'center', alignItems: 'center' }}>
             <TokenSymbol symbol="BOMB-BNB-LP" size={28} />
-            <span style={{ padding: '4px' }}>BOMB-BTCB</span>
+            <span style={{ padding: '4px' }}>BOMB-BTCB</span>&emsp;
             <span
               style={{
                 fontSize: '10px',
@@ -107,47 +175,13 @@ const Dashboard = () => {
               <td>≈ $298.88</td>
             </tr>
           </table>
-
           <div style={{ display: 'flex', alignItems: 'flex-end' }}>
             {/* href={buyBombAddress} */}
-            <button
-              style={{
-                margin: '5px',
-                padding: '6px 24px 6px 8px',
-                borderRadius: '16px',
-                background: 'none',
-                color: 'white',
-                border: ' 2px solid white',
-              }}
-            >
-              Deposit
-            </button>
+            <Button text="Deposit" symbol="UP"/>
             {/* href={buyBombAddress} */}
-            <button
-              style={{
-                margin: '5px',
-                padding: '6px 24px 6px 8px',
-                borderRadius: '16px',
-                background: 'none',
-                color: 'white',
-                border: ' 2px solid white',
-              }}
-            >
-              Withdraw
-            </button>
+            <Button text="Withdraw" symbol="DOWN"/>
             {/* href={buyBombAddress} */}
-            <button
-              style={{
-                margin: '5px',
-                padding: '6px 24px 6px 8px',
-                borderRadius: '16px',
-                background: 'none',
-                color: 'white',
-                border: ' 2px solid white',
-              }}
-            >
-              Claim Rewards
-            </button>
+            <Button text="Claim Rewards" symbol="BSHARE"/>
           </div>
         </div>
         <hr style={{ border: '1px solid rgba(0, 173, 232, 1)' }} />
@@ -157,6 +191,7 @@ const Dashboard = () => {
           <div style={{ fontSize: '20px', display: 'flex', alignContent: 'center', alignItems: 'center' }}>
             <TokenSymbol symbol="BOMB-BNB-LP" size={28} />
             <span style={{ padding: '4px' }}>BSHARE-BNB</span>
+            &emsp;
             <span
               style={{
                 fontSize: '10px',
@@ -194,53 +229,52 @@ const Dashboard = () => {
 
           <div style={{ display: 'flex', alignItems: 'flex-end' }}>
             {/* href={buyBombAddress} */}
-            <button
-              style={{
-                margin: '5px',
-                padding: '6px 24px 6px 8px',
-                borderRadius: '16px',
-                background: 'none',
-                color: 'white',
-                border: ' 2px solid white',
-              }}
-            >
-              Deposit
-            </button>
+            <Button text="Deposit" symbol="UP"/>
             {/* href={buyBombAddress} */}
-            <button
-              style={{
-                margin: '5px',
-                padding: '6px 24px 6px 8px',
-                borderRadius: '16px',
-                background: 'none',
-                color: 'white',
-                border: ' 2px solid white',
-              }}
-            >
-              Withdraw
-            </button>
+            <Button text="Withdraw" symbol="DOWN"/>
             {/* href={buyBombAddress} */}
-            <button
-              style={{
-                margin: '5px',
-                padding: '6px 24px 6px 8px',
-                borderRadius: '16px',
-                background: 'none',
-                color: 'white',
-                border: ' 2px solid white',
-              }}
-            >
-              Claim Rewards
-            </button>
+            <Button text="Claim Rewards" symbol="BSHARE"/>
           </div>
         </div>
       </Card>
 
       <Card>
-        <div style={{ float: 'inline-end' }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <TokenSymbol symbol="BBOND" size={40} />
-          <span style={{ fontSize: '20px' }}>BONDS <br/></span>
-          <span>BBOND can be purchased only on contraction periods, when TWAP of BOMB is below 1</span>
+          <div>
+            <p style={{ fontSize: '20px', margin: '4px', fontWeight: '400' }}>Bonds </p>
+            <p style={{ margin: '4px' }}>
+              BBOND can be purchased only on contraction periods, when TWAP of BOMB is below 1
+            </p>
+          </div>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ margin: '0 4px', width: '33%' }}>
+            <p style={{ fontWeight: 'lighter' }}>Current Price:(Bomb)^2</p>
+            <p style={{ fontSize: '20px', fontWeight: '500' }}>{Number(scalingFactor/100000000000000)} BTCB</p>
+          </div>
+          <div style={{ margin: '0 4px', textAlign: 'center', width: '33%' }}>
+            <p style={{ fontWeight: 'lighter' }}>Available to redeem:</p>
+            <p style={{ fontSize: '20px', fontWeight: '500' }}>
+              <TokenSymbol symbol="BBOND" size={24} />
+              456
+            </p>
+          </div>
+          <div style={{ width: '33%' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', margin: '0 8px' }}>
+                <span>Purchase BBond</span>
+                <span>Bom is over peg</span>
+              </div>
+              <Button text="Purchase" symbol="PURCHASE"/>
+
+            </div>
+            <hr></hr>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ margin: '8px' }}>Redeem Bomb</span>
+              <Button text="Redeem" symbol="DOWN"/>
+            </div>
+          </div>
         </div>
       </Card>
     </Container>
