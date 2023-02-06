@@ -1,7 +1,7 @@
 import React from 'react';
 import TokenSymbol from '../../../components/TokenSymbol';
 
-const Button = (props) => {
+const Button1 = (props) => {
   return (
     <button disabled={props.disable ? props.disable : false}
       style={{
@@ -19,4 +19,4 @@ const Button = (props) => {
   );
 };
 
-export default Button;
+export default Button1;

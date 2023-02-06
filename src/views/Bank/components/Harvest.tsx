@@ -86,4 +86,5 @@ const StyledCardContentInner = styled.div`
   justify-content: space-between;
 `;
 
+
 export default Harvest;
