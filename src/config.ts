@@ -2,27 +2,7 @@ import { Configuration } from './bomb-finance/config';
 import { BankInfo } from './bomb-finance';
 
 const configurations: { [env: string]: Configuration } = {
-  // development: {
-  //   chainId: 97,
-  //   networkName: 'BSC Testnet',
-  //   ftmscanUrl: 'https://testnet.bscscan.com/',
-  //   defaultProvider: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
-  //   deployments: require('./bomb-finance/deployments/deployments.testing.json'),
-  //   externalTokens: {
-  //     WBNB: ['0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', 18],
-  //     FUSDT: ['0x55d398326f99059fF775485246999027B3197955', 18], // This is actually BUSD on mainnet not fusdt
-  //     BTCB: ['0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', 18],
-  //     ZOO: ['0x09e145a1d53c0045f41aeef25d8ff982ae74dd56', 0],
-  //     SHIBA: ['0x9ba3e4f84a34df4e08c112e1a0ff148b81655615', 9],
-  //     'USDT-BNB-LP': ['0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16', 18],
-  //     'BOMB-BTCB-LP': ['0x2A651563C9d3Af67aE0388a5c8F89b867038089e', 18],
-  //     'BSHARE-BNB-LP': ['0x1303246855b5B5EbC71F049Fdb607494e97218f8', 18],
-  //   },
-  //   baseLaunchDate: new Date('2021-11-21 1:00:00Z'),
-  //   bondLaunchesAt: new Date('2020-12-03T15:00:00Z'),
-  //   boardroomLaunchesAt: new Date('2020-12-11T00:00:00Z'),
-  //   refreshInterval: 10000,
-  // },
+  // development: {s
   development: {
     chainId: 56,
     networkName: 'Ganache_project',

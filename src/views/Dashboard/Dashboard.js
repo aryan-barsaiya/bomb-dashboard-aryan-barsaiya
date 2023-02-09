@@ -1,6 +1,5 @@
 import React, { useMemo, useEffect, useCallback } from 'react';
 import moment from 'moment';
-import { useHistory } from 'react-router-dom';
 // import useCashPriceInLastTWAP from '../../hooks/useCashPriceInLastTP';
 import Table from './Components/Table';
 import styled from 'styled-components';
@@ -8,23 +7,23 @@ import Footer from '../../components/Footer';
 import Nav from '../../components/Nav';
 import TokenSymbol from '../../components/TokenSymbol';
 import useCashPriceInLastTWAP from '../../hooks/useCashPriceInLastTWAP';
-import Button1 from './Components/Button';
 import ProgressCountdown from '../Boardroom/components/ProgressCountdown';
 import useCurrentEpoch from '../../hooks/useCurrentEpoch';
+import uselastEpoch from '../../hooks/useLastEpoch';
 import useCashPriceInEstimatedTWAP from '../../hooks/useCashPriceInEstimatedTWAP';
 import useTotalStakedOnBoardroom from '../../hooks/useTotalStakedOnBoardroom';
-import ExchangeCard from '../Bond/components/ExchangeCard';
+import useStatsForPool from '../../hooks/useStatsForPool';
 
 // import { Token } from 'graphql';
-import BombImage from '../../assets/img/bomb-512.png';
 import CountUp from 'react-countup';
-import { Button, Grid, Typography } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import { getDisplayBalance } from '../../utils/formatBalance';
 import useTotalValueLocked from '../../hooks/useTotalValueLocked';
 import useFetchBoardroomAPR from '../../hooks/useFetchBoardroomAPR';
 import useClaimRewardCheck from '../../hooks/boardroom/useClaimRewardCheck';
 import useWithdrawCheck from '../../hooks/boardroom/useWithdrawCheck';
 import useRedeemOnBoardroom from '../../hooks/useRedeemOnBoardroom';
+import useBank from '../../hooks/useBank';
 
 import useTreasuryAllocationTimes from '../../hooks/useTreasuryAllocationTimes';
 import useEarnings from '../../hooks/useEarnings';
@@ -35,13 +34,10 @@ import useShareStats from '../../hooks/usebShareStats';
 import useStakedBalanceOnBoardroom from '../../hooks/useStakedBalanceOnBoardroom';
 import Bank from '../../bomb-finance';
 import useTokenBalance from '../../hooks/useTokenBalance';
-import useBondsPurchasable from '../../hooks/useBondsPurchasable';
 import useBondStats from '../../hooks/useBondStats';
 import { useTransactionAdder } from '../../state/transactions/hooks';
-import { BOND_REDEEM_PRICE, BOND_REDEEM_PRICE_BN } from '../../bomb-finance/constants';
-import Harvest from '../Bank/components/Harvest';
+import {  BOND_REDEEM_PRICE_BN } from '../../bomb-finance/constants';
 import useApprove, { ApprovalState } from '../../hooks/useApprove';
-import { Token } from 'graphql';
 // import
 
 // const cashPrice = useCashPriceInLastTWAP();
@@ -84,24 +80,9 @@ const Title = styled.h2`
   margin: 1rem 0 0 0;
   text-align: center;
 `;
-const StyledBond = styled.div`
-  display: flex;
-  @media (max-width: 768px) {
-    width: 100%;
-    flex-flow: column nowrap;
-    align-items: center;
-  }
-`;
-const StyledCardWrapper = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  @media (max-width: 768px) {
-    width: 80%;
-  }
-`;
+
 const Dashboard = () => {
-  const history = useHistory();
+  useEffect(() => window.scrollTo(0, 0));
   const TVL = useTotalValueLocked();
   const cashPrice = useCashPriceInLastTWAP();
   const stakedBalance = useStakedBalanceOnBoardroom();
@@ -109,16 +90,23 @@ const Dashboard = () => {
   const earnings = useEarnings(Bank.contract, Bank.earnTokenName, Bank.poolId);
   const cashStat = useCashPriceInEstimatedTWAP();
   const addTransaction = useTransactionAdder();
-  const bondsPurchasable = useBondsPurchasable();
   const bombFinance = useBombFinance();
   const bondBalance = useTokenBalance(bombFinance?.BBOND);
   const { onReward } = useHarvest(Bank);
   const isBondRedeemable = useMemo(() => cashPrice.gt(BOND_REDEEM_PRICE_BN), [cashPrice]);
   const bondStat = useBondStats();
-  const isBondPurchasable = useMemo(() => Number(bondStat?.tokenInFtm) < 1.01, [bondStat]);
   const bombStats = useBombStats();
   const tShareStats = useShareStats();
   const currentEpoch = useCurrentEpoch();
+  const lastEpoch =uselastEpoch();
+
+  const bShareBank = useBank('BshareBnbLPBShareRewardPool');
+  const bombBTCBBank = useBank('BombBtcbLPBShareRewardPool');
+
+  const statsOnPoolBombBTCB =   useStatsForPool(bombBTCBBank.address);
+  console.log(statsOnPoolBombBTCB);
+  const statsOnPoolBShare = useStatsForPool(bShareBank);
+
   const boardroomAPR = useFetchBoardroomAPR();
   const totalStaked = useTotalStakedOnBoardroom();
 
@@ -127,7 +115,6 @@ const Dashboard = () => {
 
   const liveEpochValue = useMemo(() => (cashStat ? Number(cashStat.priceInDollars).toFixed(4) : null), [cashStat]);
 
-  const tokenName = Bank.earnTokenName === 'BSHARE' ? 'BSHARE' : 'BOMB';
   const tokenStats = Bank.earnTokenName === 'BSHARE' ? tShareStats : bombStats;
   const tokenPriceInDollars = useMemo(
     () => (tokenStats ? Number(tokenStats.priceInDollars).toFixed(2) : null),
@@ -139,27 +126,37 @@ const Dashboard = () => {
 
   const handleBuyBonds = useCallback(
     async (amount) => {
-      const tx = await bombFinance?.buyBonds(amount);
+      try {const tx = await bombFinance?.buyBonds(amount);
       addTransaction(tx, {
         summary: `Buy ${Number(amount).toFixed(2)} BBOND with ${amount} BOMB`,
-      });
+      });}
+       catch (err) {
+        console.error(err);
+      }
     },
     [bombFinance, addTransaction],
   );
-  const [approveStatus, approve] = useApprove(bombFinance.BSHARE, bombFinance.contracts.Boardroom.address);
+  const [approveBSHAREStatus, approveBSHARE] = useApprove(bombFinance.BSHARE, bombFinance.contracts.Boardroom.address);
+  const [approveBBOMB_BTCBStatus, approveBBOMB_BTCB] = useApprove(bombFinance.BBOMBBTCB, bombFinance.contracts.Boardroom.address);
+
 
   const handleRedeemBonds = useCallback(
     async (amount) => {
+      try {
       const tx = await bombFinance?.redeemBonds(amount);
       addTransaction(tx, { summary: `Redeem ${amount} BBOND` });
-    },
+    }
+    catch (err) {
+      console.error(err);
+       
+    }},
     [bombFinance, addTransaction],
   );
-  let lastEpochValue = 0;
-  useEffect(() => {
-    lastEpochValue = liveEpochValue;
-  }, [currentEpoch]);
+  // console.log(statsOnPoolBombBTCB.TVL);
+  // console.log(statsOnPoolBombBTCB.dailyAPR);
+  // console.log(statsOnPoolBombBTCB.yearlyAPR);
 
+  
   return (
     <div>
       <Container>
@@ -192,7 +189,8 @@ const Dashboard = () => {
                 TVL: <CountUp style={{ fontSize: '25px' }} end={TVL} separator="," prefix="$" />
               </p>
               <p style={{ fontSize: '16px', margin: '0', fontWeight: '100', padding: '2px' }}>
-                Last Epoch TWAP:{lastEpochValue}
+                Last Epoch TWAP: <Typography>{(Number(lastEpoch)/100000000000000).toFixed(5)}</Typography>
+
               </p>
             </div>
           </div>
@@ -323,8 +321,8 @@ const Dashboard = () => {
                       margin: '5px',
                       flex: 'row',
                     }}
-                    disabled={approveStatus !== ApprovalState.NOT_APPROVED}
-                    onClick={approve}
+                    disabled={approveBSHAREStatus !== ApprovalState.NOT_APPROVED}
+                    onClick={approveBSHARE}
                   >
                     Deposit &emsp;
                     <TokenSymbol symbol="UP" size={16} />
@@ -427,7 +425,8 @@ const Dashboard = () => {
               </span>
             </div>
             <div style={{ fontSize: '20px', display: 'flex', alignContent: 'center', alignItems: 'center' }}>
-              TVL: <CountUp style={{ fontSize: '25px' }} end={TVL} separator="," prefix="$" />
+              TVL: 
+              <CountUp style={{ fontSize: '25px' }} end={statsOnPoolBombBTCB?.TVL} separator="," prefix="$" />
             </div>
           </div>
           <hr />
@@ -437,10 +436,11 @@ const Dashboard = () => {
               <div style={{ margin: '8px' }}>
                 <p></p>
                 <p>Daily return:</p>
-                <p>{(boardroomAPR / 365).toFixed(2)}%</p>
+                <Typography>{statsOnPoolBombBTCB?.dailyAPR}%</Typography>
+                <p></p>
               </div>
               <div style={{ margin: '8px' }}>
-                <p>Your Stack</p>
+                <p>Your Stake</p>
                 <p>{getDisplayBalance(stakedBalance)}</p>
                 <p>≈ ${getDisplayBalance(earnings)}</p>
               </div>
@@ -464,8 +464,8 @@ const Dashboard = () => {
                   borderRadius: '20px',
                   margin: '5px',
                 }}
-                disabled={approveStatus !== ApprovalState.NOT_APPROVED}
-                onClick={approve}
+                disabled={approveBBOMB_BTCBStatus !== ApprovalState.NOT_APPROVED}
+                onClick={approveBBOMB_BTCB}
               >
                 Deposit
                 &emsp;
@@ -537,7 +537,7 @@ const Dashboard = () => {
               </span>
             </div>
             <div style={{ fontSize: '20px', display: 'flex', alignContent: 'center', alignItems: 'center' }}>
-              TVL: <CountUp style={{ fontSize: '25px' }} end={TVL} separator="," prefix="$" />
+              TVL: <CountUp style={{ fontSize: '25px' }} end={statsOnPoolBShare?.TVL} separator="," prefix="$" />
             </div>
           </div>
           <hr />
@@ -547,10 +547,10 @@ const Dashboard = () => {
               <div style={{ margin: '12px' }}>
                 <p></p>
                 <p>Daily return:</p>
-                <p>{(boardroomAPR / 365).toFixed(2)}%</p>
+                <Typography>{statsOnPoolBShare?.dailyAPR}%</Typography>
               </div>
               <div style={{ margin: '12px' }}>
-                <p>Your Stack</p>
+                <p>Your Stake</p>
                 <p>{getDisplayBalance(stakedBalance)}</p>
                 <p>≈ ${getDisplayBalance(earnings)}</p>
               </div>
@@ -575,8 +575,8 @@ const Dashboard = () => {
                   borderRadius: '20px',
                   marginBottom: '5px',
                 }}
-                disabled={approveStatus !== ApprovalState.NOT_APPROVED}
-                onClick={approve}
+                disabled={approveBSHAREStatus !== ApprovalState.NOT_APPROVED}
+                onClick={approveBSHARE}
               >
                 Deposit
                 &emsp;

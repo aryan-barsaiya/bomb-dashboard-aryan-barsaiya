@@ -51,9 +51,7 @@ const Tr = styled.tr`
 //   textAlign: 'center',
 //   color: theme.palette.text.secondary,
 // }));
-console.log("Aryan.Barsaiya");
 // const bShareStats = usebShareStats();
-console.log("Aryan.Barsaiya");
 // const bShareTotalSupply = useMemo(() => (bShareStats ? String(bShareStats.totalSupply) : null), [bShareStats]);
 
 export default function BasicTable() {

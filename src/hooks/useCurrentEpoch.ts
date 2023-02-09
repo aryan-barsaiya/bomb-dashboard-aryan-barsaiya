@@ -3,7 +3,7 @@ import useBombFinance from './useBombFinance';
 import {BigNumber} from 'ethers';
 import useRefresh from './useRefresh';
 
-const useCurrentEpoch = () => {
+const  useCurrentEpoch = () => {
   const [currentEpoch, setCurrentEpoch] = useState<BigNumber>(BigNumber.from(0));
   const bombFinance = useBombFinance();
   const {slowRefresh} = useRefresh();

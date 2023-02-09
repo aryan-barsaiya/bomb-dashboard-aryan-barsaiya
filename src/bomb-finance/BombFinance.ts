@@ -530,6 +530,12 @@ export class BombFinance {
     return Treasury.epoch();
   }
 
+  async getLastEpoch() : Promise<BigNumber> {
+    const { Treasury } = this.contracts;
+    return Treasury.previousEpochBombPrice();
+  }
+  
+
   async getBondOraclePriceInLastTWAP(): Promise<BigNumber> {
     const { Treasury } = this.contracts;
     return Treasury.getBondPremiumRate();
