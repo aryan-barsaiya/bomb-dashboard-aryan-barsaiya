@@ -36,7 +36,7 @@ import Bank from '../../bomb-finance';
 import useTokenBalance from '../../hooks/useTokenBalance';
 import useBondStats from '../../hooks/useBondStats';
 import { useTransactionAdder } from '../../state/transactions/hooks';
-import {  BOND_REDEEM_PRICE_BN } from '../../bomb-finance/constants';
+import { BOND_REDEEM_PRICE_BN } from '../../bomb-finance/constants';
 import useApprove, { ApprovalState } from '../../hooks/useApprove';
 // import
 
@@ -98,12 +98,12 @@ const Dashboard = () => {
   const bombStats = useBombStats();
   const tShareStats = useShareStats();
   const currentEpoch = useCurrentEpoch();
-  const lastEpoch =uselastEpoch();
+  const lastEpoch = uselastEpoch();
 
   const bShareBank = useBank('BshareBnbLPBShareRewardPool');
   const bombBTCBBank = useBank('BombBtcbLPBShareRewardPool');
 
-  const statsOnPoolBombBTCB =   useStatsForPool(bombBTCBBank.address);
+  const statsOnPoolBombBTCB = useStatsForPool(bombBTCBBank.address);
   console.log(statsOnPoolBombBTCB);
   const statsOnPoolBShare = useStatsForPool(bShareBank);
 
@@ -126,37 +126,38 @@ const Dashboard = () => {
 
   const handleBuyBonds = useCallback(
     async (amount) => {
-      try {const tx = await bombFinance?.buyBonds(amount);
-      addTransaction(tx, {
-        summary: `Buy ${Number(amount).toFixed(2)} BBOND with ${amount} BOMB`,
-      });}
-       catch (err) {
+      try {
+        const tx = await bombFinance?.buyBonds(amount);
+        addTransaction(tx, {
+          summary: `Buy ${Number(amount).toFixed(2)} BBOND with ${amount} BOMB`,
+        });
+      } catch (err) {
         console.error(err);
       }
     },
     [bombFinance, addTransaction],
   );
   const [approveBSHAREStatus, approveBSHARE] = useApprove(bombFinance.BSHARE, bombFinance.contracts.Boardroom.address);
-  const [approveBBOMB_BTCBStatus, approveBBOMB_BTCB] = useApprove(bombFinance.BBOMBBTCB, bombFinance.contracts.Boardroom.address);
-
+  const [approveBBOMB_BTCBStatus, approveBBOMB_BTCB] = useApprove(
+    bombFinance.BBOMBBTCB,
+    bombFinance.contracts.Boardroom.address,
+  );
 
   const handleRedeemBonds = useCallback(
     async (amount) => {
       try {
-      const tx = await bombFinance?.redeemBonds(amount);
-      addTransaction(tx, { summary: `Redeem ${amount} BBOND` });
-    }
-    catch (err) {
-      console.error(err);
-       
-    }},
+        const tx = await bombFinance?.redeemBonds(amount);
+        addTransaction(tx, { summary: `Redeem ${amount} BBOND` });
+      } catch (err) {
+        console.error(err);
+      }
+    },
     [bombFinance, addTransaction],
   );
   // console.log(statsOnPoolBombBTCB.TVL);
   // console.log(statsOnPoolBombBTCB.dailyAPR);
   // console.log(statsOnPoolBombBTCB.yearlyAPR);
 
-  
   return (
     <div>
       <Container>
@@ -189,27 +190,28 @@ const Dashboard = () => {
                 TVL: <CountUp style={{ fontSize: '25px' }} end={TVL} separator="," prefix="$" />
               </p>
               <p style={{ fontSize: '16px', margin: '0', fontWeight: '100', padding: '2px' }}>
-                Last Epoch TWAP: <Typography>{(Number(lastEpoch)/100000000000000).toFixed(5)}</Typography>
-
+                Last Epoch TWAP: <Typography>{(Number(lastEpoch) / 100000000000000).toFixed(5)}</Typography>
               </p>
             </div>
           </div>
         </Card>
-        
 
         <Card style={{ float: 'right', width: '20%', marginRight: '9rem', marginLeft: '2px', height: '23rem' }}>
           <h2>Latest News</h2>
         </Card>
 
         <span style={{ marginLeft: '9rem', marginBottom: '1rem' }}>
-          <div  style={{color:"white",width:"100%",textAlign:"right",marginBottom:"5px"}}>
-          <a style={{color:"rgba(158, 230, 255, 1)",padding:"10px"}} href="https://docs.bomb.money/">Read Investment Strategy</a>
+          <div style={{ color: 'white', width: '100%', textAlign: 'right', marginBottom: '5px' }}>
+            <a style={{ color: 'rgba(158, 230, 255, 1)', padding: '10px' }} href="https://docs.bomb.money/">
+              Read Investment Strategy
+            </a>
           </div>
           <div
             style={{
               cursor: 'pointer',
               color: 'white',
-              fontSize: '1.2rem',
+              fontFamily : 'bold',
+              fontSize: '1.7rem',
               marginLeft: '9rem',
               paddingTop: '1rem',
               paddingBottom: '1rem',
@@ -218,7 +220,7 @@ const Dashboard = () => {
               backgroundImage: 'linear-gradient(rgba(0, 245, 171, 0.5),rgba(0, 173, 232, 0.5))',
             }}
           >
-            <a >Invest Now</a>
+            <a>Invest Now</a>
           </div>
         </span>
         <div
@@ -234,7 +236,7 @@ const Dashboard = () => {
           <div
             style={{
               cursor: 'pointer',
-              fontSize: '1rem',
+              fontSize: '1.5rem',
               textAlign: 'center',
               padding: '16px 40px',
               cursor: 'pointer',
@@ -243,12 +245,17 @@ const Dashboard = () => {
               backgroundImage: 'linear-gradient(rgba(114, 140, 223, 1),rgba(255, 255, 255, 0.5))',
             }}
           >
-            <a style={{color:"white",textDecoration:"none"}} href="https://discord.bomb.money">Chat On Discord</a>
+              <TokenSymbol symbol="DISCORD" size={30} />
+
+            <a style={{ color: 'white', textDecoration: 'none', textAlign:'center' }} href="https://discord.bomb.money">
+              {' '}
+              Chat On Discord
+            </a>
           </div>
           <div
             style={{
               cursor: 'pointer',
-              fontSize: '1rem',
+              fontSize: '1.5rem',
               textAlign: 'center',
               padding: '16px 40px',
               width: '40%',
@@ -256,7 +263,12 @@ const Dashboard = () => {
               backgroundImage: 'linear-gradient(rgba(114, 140, 223, 1),rgba(255, 255, 255, 0.5))',
             }}
           >
-            <a style={{color:"white",textDecoration:"none"}} href="https://discord.bomb.money">Read Docs</a>
+
+            <TokenSymbol symbol='DOCS' size={30}/>
+
+            <a style={{ color: 'white', textDecoration: 'none',textAlign:'center' }} href="https://discord.bomb.money">
+              Read Docs
+            </a>
           </div>
         </div>
         <Card variant="outlined" style={{ width: '56%', marginLeft: '9rem ', marginTop: '1rem' }}>
@@ -276,7 +288,7 @@ const Dashboard = () => {
             <hr style={{ color: 'white' }} />
             <div style={{ textAlign: 'right', margin: '16px' }}>
               Total Staked:
-              <TokenSymbol symbol='BSHARE' size={15}/>
+              <TokenSymbol symbol="BSHARE" size={15} />
               {getDisplayBalance(totalStaked)}
             </div>
 
@@ -342,8 +354,7 @@ const Dashboard = () => {
                     disabled={stakedBalance.eq(0) || (!canWithdraw && !canClaimReward)}
                     onClick={onRedeem}
                   >
-                    Withdraw
-                    &nbsp;
+                    Withdraw &nbsp;
                     <TokenSymbol symbol="DOWN" size={16} />
                   </div>
                 </div>
@@ -363,9 +374,8 @@ const Dashboard = () => {
                   onClick={onReward}
                   disabled={earnings.eq(0) || !canClaimReward}
                 >
-                  &emsp;Claim Reward
-                  &emsp;&emsp;
-                    <TokenSymbol symbol="BSHARE" size={18} />
+                  &emsp;Claim Reward &emsp;&emsp;
+                  <TokenSymbol symbol="BSHARE" size={18} />
                 </div>
               </div>
             </Grid>
@@ -404,7 +414,7 @@ const Dashboard = () => {
               disabled={earnings.eq(0) || !canClaimReward}
             >
               Claim All&emsp;
-                    <TokenSymbol symbol="BSHARE" size={18} />
+              <TokenSymbol symbol="BSHARE" size={18} />
             </div>
           </div>
           {/* Bomb btcb */}
@@ -425,7 +435,7 @@ const Dashboard = () => {
               </span>
             </div>
             <div style={{ fontSize: '20px', display: 'flex', alignContent: 'center', alignItems: 'center' }}>
-              TVL: 
+              TVL:
               <CountUp style={{ fontSize: '25px' }} end={statsOnPoolBombBTCB?.TVL} separator="," prefix="$" />
             </div>
           </div>
@@ -467,9 +477,8 @@ const Dashboard = () => {
                 disabled={approveBBOMB_BTCBStatus !== ApprovalState.NOT_APPROVED}
                 onClick={approveBBOMB_BTCB}
               >
-                Deposit
-                &emsp;
-                    <TokenSymbol symbol="UP" size={16} />
+                Deposit &emsp;
+                <TokenSymbol symbol="UP" size={16} />
               </div>
               {/* href={buyBombAddress} */}
               {/* <Button1 text="Withdraw" symbol="DOWN" />
@@ -488,10 +497,8 @@ const Dashboard = () => {
                 disabled={stakedBalance.eq(0) || (!canWithdraw && !canClaimReward)}
                 onClick={onRedeem}
               >
-                Withdraw
-                &emsp;
-                    <TokenSymbol symbol="DOWN" size={15} />
-              
+                Withdraw &emsp;
+                <TokenSymbol symbol="DOWN" size={15} />
               </div>
               {/* href={buyBombAddress} */}
               {/* <Button1 text="Claim Rewards" symbol="BSHARE" /> */}
@@ -509,10 +516,8 @@ const Dashboard = () => {
                 onClick={onReward}
                 disabled={earnings.eq(0) || !canClaimReward}
               >
-                Claim Reward
-                &emsp;
-                    <TokenSymbol symbol="BSHARE" size={16} />
-              
+                Claim Reward &emsp;
+                <TokenSymbol symbol="BSHARE" size={16} />
               </div>
             </div>
           </div>
@@ -578,9 +583,8 @@ const Dashboard = () => {
                 disabled={approveBSHAREStatus !== ApprovalState.NOT_APPROVED}
                 onClick={approveBSHARE}
               >
-                Deposit
-                &emsp;
-                    <TokenSymbol symbol="UP" size={16} />
+                Deposit &emsp;
+                <TokenSymbol symbol="UP" size={16} />
               </div>
               {/* href={buyBombAddress} */}
               {/* <Button1 text="Withdraw" symbol="DOWN" /> */}
@@ -598,10 +602,8 @@ const Dashboard = () => {
                 disabled={stakedBalance.eq(0) || (!canWithdraw && !canClaimReward)}
                 onClick={onRedeem}
               >
-                Withdraw
-                &emsp;
-                    <TokenSymbol symbol="DOWN" size={15} />
-              
+                Withdraw &emsp;
+                <TokenSymbol symbol="DOWN" size={15} />
               </div>
               {/* href={buyBombAddress} */}
               {/* <Button1 text="Claim Rewards" symbol="BSHARE" /> */}
@@ -620,8 +622,7 @@ const Dashboard = () => {
                 disabled={earnings.eq(0) || !canClaimReward}
               >
                 Claim Reward&emsp;
-                    <TokenSymbol symbol="BSHARE" size={16} />
-              
+                <TokenSymbol symbol="BSHARE" size={16} />
               </div>
             </div>
           </div>
@@ -668,10 +669,8 @@ const Dashboard = () => {
                   onClick={handleBuyBonds}
                   disabled={!bondStat || isBondRedeemable}
                 >
-                  Purchase
-                  &emsp;
-                    <TokenSymbol symbol="PURCHASE" size={16} />
-
+                  Purchase &emsp;
+                  <TokenSymbol symbol="PURCHASE" size={16} />
                 </div>
                 <hr></hr>
                 <div
@@ -687,10 +686,8 @@ const Dashboard = () => {
                   onClick={handleRedeemBonds}
                   disabled={!bondStat || bondBalance.eq(0) || !isBondRedeemable}
                 >
-                  Redeem
-                  &emsp;
-                    <TokenSymbol symbol="DOWN" size={16} />
-              
+                  Redeem &emsp;
+                  <TokenSymbol symbol="DOWN" size={16} />
                 </div>
               </div>
             </div>

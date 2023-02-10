@@ -14,6 +14,8 @@ import bshareFtmLpLogo from '../../assets/img/bshare-bnb-LP.png';
 import busmBusdLpLogo from '../../assets/img/busm-busd-lp.png';
 import upwardLogo from '../../assets/img/upward.png';
 import downwardLogo from '../../assets/img/down-arrow.png';
+import docsLogo from '../../assets/img/docs.png';
+import discordLogo from '../../assets/img/discord.png';
 
 import purchaseLogo from '../../assets/img/cart.png';
 
@@ -49,6 +51,8 @@ const logosBySymbol: {[title: string]: string} = {
   UP :upwardLogo,
   DOWN:downwardLogo,
   PURCHASE:purchaseLogo,
+  DISCORD: discordLogo,
+  DOCS : docsLogo,
   'BOMB-BNB-LP': bombFtmLpLogo,
   'BOMB-BTCB-LP': bombFtmLpLogo,
     '80BOMB-20BTCB-LP': bombFtmLpLogo,
